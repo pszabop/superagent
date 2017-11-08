@@ -39,6 +39,13 @@ app.all("/test-307", (req, res) => {
 app.all("/test-308", (req, res) => {
   res.redirect(308, `${base2}/`);
 });
+app.all("/test-302-authorization", (req, res) => {
+  res.redirect(302, `${base2}/authorization`);
+});
+
+app2.all("/authorization", (req, res) => {
+  res.send(req.headers.authorization);
+});
 
 app2.all("/", (req, res) => {
   res.send(req.method);
@@ -139,7 +146,7 @@ describe("request.post", () => {
     });
   });
   describe("on 302 redirect", () => {
-    it("should follow Location with a GET request", done => {
+    it("should follow Location with a POST request", done => {
       const req = request
         .post(`${base}/test-302`)
         .redirects(1)
@@ -149,6 +156,22 @@ describe("request.post", () => {
           );
           res.status.should.eql(200);
           res.text.should.eql("GET");
+          done();
+        });
+    });
+  });
+  describe("on 302 redirect", () => {
+    it("should remove authorization header and cookie", done => {
+      const req = request
+        .get(`${base}/test-302-authorization`)
+        .set('Authorization', 'foo')
+        .redirects(1)
+        .end((err, res) => {
+          req.req._headers.host.should.eql(
+            `localhost:${server2.address().port}`
+          );
+          res.status.should.eql(200);
+          res.text.should.eql("");
           done();
         });
     });
