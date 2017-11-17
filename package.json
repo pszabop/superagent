@@ -1,7 +1,7 @@
 {
-  "name": "superagent",
+  "name": "superagent-auth",
   "version": "3.8.1",
-  "description": "elegant & feature rich browser / node HTTP with a fluent API",
+  "description": "elegant & feature rich browser / node HTTP with a fluent API, turn around auth",
   "scripts": {
     "prepare": "make all",
     "test": "make test"
